@@ -21,29 +21,32 @@ st.set_page_config(page_title="Welcome to interesting Langchain applications", l
 
 st.title('Welcome to interesting Langchain applications')
 
-# with st.container():
-#     st.header("OpenAI Settings")
-#     st.markdown(f"""
-#         | OpenAI API Key |
-#         | -------------- |
-#         | {st.session_state['OPENAI_API_KEY']} |
-#         """)
+if "message" not in st.session_state:
+    st.session_state['message'] = []
 
-# with st.container():
-#     st.header("Pinecone Settings")
-#     st.markdown(f"""
-#         | Pinecone API Key | Environment |
-#         | ---------------- | ----------- |
-#         | {st.session_state['PINECONE_API_KEY']} | {st.session_state["PINECONE_ENVIRONMENT"]} |
-#         """)
+
 
 if chat:
     with st.container():
         st.header("Chat with GPT")
-        prompt = st.text_input("Prompt",value="", max_chars=None, key=None, type="default")
-        asked = st.button("Ask")
-        if asked:
+
+        for message in st.session_state['message']:
+            if isinstance(message, HumanMessage):
+                with st.chat_message("user"):
+                    st.markdown(message.content)
+            elif isinstance(message, AIMessage):
+                with st.chat_message("assistant"):
+                    st.markdown(message.content)
+                    
+        prompt = st.chat_input("Type something...")
+        if prompt:
+            st.session_state['message'].append(HumanMessage(content=prompt))
+            with st.chat_message("user"):
+                st.markdown(prompt)
             ai_message = chat([HumanMessage(content=prompt)])
+            st.session_state['message'].append(ai_message)
+            with st.chat_message("assistant"):
+                st.markdown(ai_message.content)
             st.write(ai_message.content)
 else:
     with st.container():
