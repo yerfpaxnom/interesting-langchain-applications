@@ -18,14 +18,12 @@ marshmallow==3.20.1
 multidict==6.0.4
 mypy-extensions==1.0.0
 numexpr==2.8.5
-numpy==1.24.4
+numpy==1.25.2
 openai==0.28.0
 packaging==23.1
 pinecone-client==2.2.2
 pydantic==2.3.0
 pydantic_core==2.6.3
-PyMuPDF==1.23.3
-PyMuPDFb==1.23.3
 python-dateutil==2.8.2
 PyYAML==6.0.1
 regex==2023.8.8
@@ -40,4 +38,3 @@ typing_extensions==4.7.1
 urllib3==2.0.4
 win32-setctime==1.1.0
 yarl==1.9.2
-chromadb==0.3.20
