@@ -4,6 +4,7 @@ from langchain.schema import (
     AIMessage, HumanMessage, SystemMessage
 )
 
+import chromadb 
 
 if 'OPENAI_API_KEY' not in st.session_state:
     st.session_state['OPENAI_API_KEY'] = ""
