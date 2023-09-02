@@ -24,7 +24,7 @@ numpy==1.25.2
 openai==0.28.0
 packaging==23.1
 pinecone-client==2.2.2
-pydantic==2.3.0
+pydantic==1.9.2
 pydantic_core==2.6.3
 python-dateutil==2.8.2
 PyYAML==6.0.1
