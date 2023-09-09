@@ -30,6 +30,7 @@ if st.session_state['OPENAI_API_KEY'] == "":
         st.warning("Please set your OPENAI API KEY in the settings page!")
 else:
     chat = ChatOpenAI(openai_api_key=st.session_state['OPENAI_API_KEY'])
+    print("key: "+st.session_state['OPENAI_API_KEY'])
 
     with st.container():
         # st.header("Chat with GPT")
