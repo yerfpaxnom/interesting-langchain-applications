@@ -15,7 +15,7 @@ if "PINECONE_ENVIRONMENT" not in st.session_state:
 
 st.set_page_config(page_title="Welcome to interesting Langchain applications", layout='wide')
 
-st.title('欢迎来到任宇林的 LangChain 频道')
+st.title('欢迎来到任宇林的 LangChain 频道~')
 
 if "message" not in st.session_state:
     st.session_state['message'] = []
