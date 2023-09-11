@@ -20,6 +20,10 @@ st.title('欢迎来到任宇林的 LangChain 频道~')
 if "message" not in st.session_state:
     st.session_state['message'] = []
 
+#
+st.session_state['OPENAI_API_KEY'] = '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'
+print("openai: " , st.session_state['OPENAI_API_KEY'] )
+
 # openAI setting
 openai_api_key = st.text_input("OPENAI API Key", value=st.session_state['OPENAI_API_KEY'], max_chars=None, key=None, type='password')
 

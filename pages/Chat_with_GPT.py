@@ -30,10 +30,10 @@ if st.session_state['OPENAI_API_KEY'] == "":
         st.warning("Please set your OPENAI API KEY in the settings page!")
 else:
     chat = ChatOpenAI(openai_api_key=st.session_state['OPENAI_API_KEY'])
-    print("key: "+st.session_state['OPENAI_API_KEY'])
 
     with st.container():
         # st.header("Chat with GPT")
+        print("1...")
 
         for message in st.session_state['message']:
             if isinstance(message, HumanMessage):
@@ -42,9 +42,13 @@ else:
             elif isinstance(message, AIMessage):
                 with st.chat_message("assistant"):
                     st.markdown(message.content)
+        print("2...")
 
         prompt = st.chat_input("Type something...")
+
+        print("3...")
         if prompt:
+            print("4...")
             st.session_state['message'].append(HumanMessage(content=prompt))
             with st.chat_message("user"):
                 st.markdown(prompt)
