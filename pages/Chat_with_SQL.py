@@ -7,6 +7,12 @@ from langchain.agents.agent_types import AgentType
 from langchain.callbacks import StreamlitCallbackHandler
 from langchain.agents.agent_toolkits import SQLDatabaseToolkit
 
+MESSAGE = 'chat_with_sql_message'
+
+# QA:
+# Q: who released an album called 'Jagged Little Pill'?
+# A: Alanis Morissette
+
 st.set_page_config(page_title="LangChain: Chat with SQL DB", page_icon="🦜")
 st.title("🦜 LangChain: Chat with SQL DB")
 
@@ -52,20 +58,20 @@ agent = create_sql_agent(
     agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
 )
 
-if "messages" not in st.session_state or st.sidebar.button("Clear message history"):
-    st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
+if MESSAGE not in st.session_state or st.sidebar.button("Clear message history"):
+    st.session_state[MESSAGE] = [{"role": "assistant", "content": "How can I help you?"}]
 
-for msg in st.session_state.messages:
+for msg in st.session_state[MESSAGE]:
     st.chat_message(msg["role"]).write(msg["content"])
 
 user_query = st.chat_input(placeholder="Ask me anything!")
 
 if user_query:
-    st.session_state.messages.append({"role": "user", "content": user_query})
+    st.session_state[MESSAGE].append({"role": "user", "content": user_query})
     st.chat_message("user").write(user_query)
 
     with st.chat_message("assistant"):
         st_cb = StreamlitCallbackHandler(st.container())
         response = agent.run(user_query, callbacks=[st_cb])
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.session_state[MESSAGE].append({"role": "assistant", "content": response})
         st.write(response)

@@ -1,5 +1,4 @@
 import streamlit as st
-from langchain.chat_models import ChatOpenAI
 from langchain.schema import (
     AIMessage, HumanMessage, SystemMessage
 )
@@ -21,7 +20,7 @@ if "message" not in st.session_state:
     st.session_state['message'] = []
 
 #
-st.session_state['OPENAI_API_KEY'] = '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'
+st.session_state['OPENAI_API_KEY'] = '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'
 print("openai: " , st.session_state['OPENAI_API_KEY'] )
 
 # openAI setting

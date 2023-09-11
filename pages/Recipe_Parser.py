@@ -75,7 +75,7 @@ with st.container():
 
     openai_api_key = st.session_state['OPENAI_API_KEY']
 
-    recipe_url = st.text_input("URL of a Jamie Oliver Recipe. eg, https://www.jamieoliver.com/recipes/chicken-recipes/lemon-tzatziki-chicken", key="recipe_url")
+    recipe_url = st.text_input("URL of a Jamie Oliver Recipe. eg,  https://www.jamieoliver.com/recipes/chicken-recipes/lemon-tzatziki-chicken", key="recipe_url")
     clicked = st.button("Parse Recipe")
     if clicked:
         html_markup = get_recipe_html(recipe_url)

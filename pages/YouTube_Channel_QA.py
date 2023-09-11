@@ -1,4 +1,5 @@
 # import os
+# import openai
 # import streamlit as st
 # from langchain.document_loaders import YoutubeLoader
 # from langchain.embeddings.openai import OpenAIEmbeddings
@@ -13,13 +14,19 @@
 #   HumanMessagePromptTemplate
 # )
 #
-# print("1")
 #
-# if st.session_state['OPENAI_API_KEY'] != "":
-#     print("2")
-#     os.environ["OPENAI_API_KEY"] = st.session_state['OPENAI_API_KEY']
+# openai.api_key = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else ''
+#
+# if openai.api_key == '':
+#     st.warning("请正确设置openai key")
+#
+# # if 'OPENAI_API_KEY' not in st.session_state:
+# #     st.session_state['OPENAI_API_KEY'] = ""
+# #
+# # if st.session_state['OPENAI_API_KEY'] != "":
+# #     os.environ["OPENAI_API_KEY"] = st.session_state['OPENAI_API_KEY']
 #     # 加载 youtube 频道
-#
+# else:
 #     with st.container():
 #
 #         youtube_url = st.text_input("URL of YouTube Channel", key="youtube_url")

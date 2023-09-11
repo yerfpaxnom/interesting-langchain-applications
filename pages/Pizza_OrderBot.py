@@ -2,9 +2,7 @@ import streamlit as st
 import os
 import openai
 
-
-# os.environ['OPENAI_API_KEY'] = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else ''
-openai.api_key = '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'
+openai.api_key = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else ''
 
 def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0):
     response = openai.ChatCompletion.create(
@@ -49,17 +47,16 @@ sprite 3.00, 2.00, 1.00 \
 bottled water 5.00 \
 """}
 
-if "message" not in st.session_state or len(st.session_state["message"]) == 0:
-    st.session_state['message'] = [system_message]
+MESSAGE = 'pizza_order_bot_message'
 
-
-
+if MESSAGE not in st.session_state or len(st.session_state[MESSAGE]) == 0:
+    st.session_state[MESSAGE] = [system_message]
 
 with st.container():
     # st.header("Chat with GPT")
 
     # 所有对话历史展示
-    for message in st.session_state['message']:
+    for message in st.session_state[MESSAGE]:
         if message['role'] == 'user':
             with st.chat_message("user"):
                 st.markdown(message['content'])
@@ -70,15 +67,15 @@ with st.container():
     prompt = st.chat_input("Type something...")
 
     if prompt:
-        st.session_state['message'].append({'role': 'user', 'content': prompt})
+        st.session_state[MESSAGE].append({'role': 'user', 'content': prompt})
 
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        print("context", st.session_state['message'])
+        print("context", st.session_state[MESSAGE])
 
-        ai_message = get_completion_from_messages(st.session_state['message'])
-        st.session_state['message'].append(ai_message)
+        ai_message = get_completion_from_messages(st.session_state[MESSAGE])
+        st.session_state[MESSAGE].append(ai_message)
 
         with st.chat_message("assistant"):
             st.markdown(ai_message['content'])
