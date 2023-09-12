@@ -13,8 +13,9 @@ MESSAGE = 'chat_with_sql_message'
 # Q: who released an album called 'Jagged Little Pill'?
 # A: Alanis Morissette
 
-st.set_page_config(page_title="LangChain: Chat with SQL DB", page_icon="🦜")
-st.title("🦜 LangChain: Chat with SQL DB")
+st.set_page_config(page_title="Chat with SQL DB", page_icon="🦜")
+st.title("Chat with SQL DB")
+st.caption("示例: 谁发行了专辑 Jagged Little Pill'？")
 
 # User inputs
 radio_opt = ["Use sample database - Chinook.db", "Connect to your SQL database"]

@@ -32,7 +32,9 @@ with st.container():
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         split_docs = text_splitter.split_documents(docs)
 
-        vectorstore = Chroma.from_documents(split_docs, embeddings, collection_name=collection_name, persist_directory=persist_directory)
+        vectorstore = Chroma.from_documents(split_docs, embeddings,
+                                            collection_name=collection_name,
+                                            persist_directory=persist_directory)
         vectorstore.persist()
 
         st.write("Done")

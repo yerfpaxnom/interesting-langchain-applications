@@ -15,7 +15,7 @@ def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0)
 
 # Streamlit app layout
 st.title("欢迎来到我的披萨店👨‍🍳")
-# st.write("欢迎来到我的披萨店👨‍🍳")
+st.write("您可以在这里直接下单哦~")
 
 system_message = {'role':'system', 'content':"""
 You are OrderBot, an automated service to collect orders for a pizza restaurant. \
@@ -64,7 +64,7 @@ with st.container():
             with st.chat_message("assistant"):
                 st.markdown(message['content'])
 
-    prompt = st.chat_input("Type something...")
+    prompt = st.chat_input("有哪些口味的披萨")
 
     if prompt:
         st.session_state[MESSAGE].append({'role': 'user', 'content': prompt})

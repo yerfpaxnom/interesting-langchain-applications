@@ -7,7 +7,7 @@ from langchain.schema import (
 )
 from langchain.chat_models import ChatOpenAI
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Union, Any
 from bs4 import BeautifulSoup
 import requests
 import streamlit as st
@@ -28,7 +28,7 @@ class Recipe(BaseModel):
     name: str = Field(description="The name of the recipe")
     ingredients: List[Ingredient] = Field(description="The list of ingredients for the recipe")
 
-PAGE_TITLE = "🥑 Amazing JO's Recipe"
+PAGE_TITLE = "🍳 Jamie Oliver's Recipe"
 st.set_page_config(layout="centered", page_title=PAGE_TITLE)
 st.title(PAGE_TITLE)
 
@@ -75,10 +75,10 @@ with st.container():
 
     openai_api_key = st.session_state['OPENAI_API_KEY']
 
-    recipe_url = st.text_input("URL of a Jamie Oliver Recipe. eg,  https://www.jamieoliver.com/recipes/chicken-recipes/lemon-tzatziki-chicken", key="recipe_url")
-    clicked = st.button("Parse Recipe")
+    recipe_url = st.text_input("URL of a Jamie Oliver Recipe. eg,  https://www.jamieoliver.com/recipes/soup-recipes/cheats-pea-soup/", key="recipe_url")
+    clicked = st.button("提取菜谱")
     if clicked:
         html_markup = get_recipe_html(recipe_url)
         if html_markup:
-            recipe = parse_by_chatgpt(openai_api_key, html_markup)
-            st.json(recipe.model_dump_json())
+            recipe: Union[BaseModel, Any] = parse_by_chatgpt(openai_api_key, html_markup)
+            st.json(recipe.json())
