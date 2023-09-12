@@ -7,7 +7,7 @@ from langchain.schema import (
 
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv()) # read local .env file
-openai.api_key  = os.environ['OPENAI_API_KEY']
+# openai.api_key  = os.environ['OPENAI_API_KEY']
 st.session_state["PINECONE_API_KEY"] = os.environ['PINECONE_API_KEY']
 st.session_state["PINECONE_ENVIRONMENT"] = os.environ['PINECONE_ENVIRONMENT']
 

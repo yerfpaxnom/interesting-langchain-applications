@@ -46,10 +46,11 @@ else:
         youtube_url = st.text_input("URL of YouTube Channel", key="youtube_url")
         clicked = st.button("提取视频信息")
         if clicked:
-            print()
+            print('begin to load youtube..., openKEY: ', openai.api_key [-5:])
             loader = YoutubeLoader.from_youtube_url(youtube_url)
             # 将数据转成 document
             documents = loader.load()
+            print('documents: ', len(documents))
 
             # 初始化文本分割器
             text_splitter = RecursiveCharacterTextSplitter(
