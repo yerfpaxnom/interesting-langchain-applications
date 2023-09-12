@@ -27,11 +27,11 @@ if QA_KEY not in st.session_state:
 
 print("1...")
 
-openai.api_key = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else ''
+openai_api_key = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else ''
 
 qa = None
 
-if openai.api_key == '':
+if openai_api_key == '':
     st.warning("请正确设置openai key")
 
 # if 'OPENAI_API_KEY' not in st.session_state:
@@ -46,7 +46,7 @@ else:
         youtube_url = st.text_input("URL of YouTube Channel", key="youtube_url")
         clicked = st.button("提取视频信息")
         if clicked:
-            print('begin to load youtube..., openKEY: ', openai.api_key [-5:])
+            print('begin to load youtube..., openKEY: ', openai_api_key[-5:])
             loader = YoutubeLoader.from_youtube_url(youtube_url)
             # 将数据转成 document
             documents = loader.load()
@@ -62,7 +62,7 @@ else:
             documents = text_splitter.split_documents(documents)
 
             # 初始化 openai embeddings
-            embeddings = OpenAIEmbeddings()
+            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
 
             # 将数据存入向量存储
             vector_store = Chroma.from_documents(documents, embeddings)
@@ -90,7 +90,7 @@ else:
 
             # 初始化问答链
             st.session_state[QA_KEY] = ConversationalRetrievalChain.from_llm(
-                ChatOpenAI(temperature=0.1,max_tokens=2048),
+                ChatOpenAI(openai_api_key=st.session_state["OPENAI_API_KEY"], temperature=0.1, max_tokens=2048),
                 retriever,
                 condense_question_prompt=prompt
             )
