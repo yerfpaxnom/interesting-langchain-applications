@@ -5,11 +5,11 @@ from langchain.schema import (
     AIMessage, HumanMessage, SystemMessage
 )
 
-from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv()) # read local .env file
+# from dotenv import load_dotenv, find_dotenv
+# _ = load_dotenv(find_dotenv()) # read local .env file
 # openai.api_key  = os.environ['OPENAI_API_KEY']
-st.session_state["PINECONE_API_KEY"] = os.environ['PINECONE_API_KEY']
-st.session_state["PINECONE_ENVIRONMENT"] = os.environ['PINECONE_ENVIRONMENT']
+# st.session_state["PINECONE_API_KEY"] = os.environ['PINECONE_API_KEY']
+# st.session_state["PINECONE_ENVIRONMENT"] = os.environ['PINECONE_ENVIRONMENT']
 
 
 if 'OPENAI_API_KEY' not in st.session_state:
