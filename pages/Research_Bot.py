@@ -26,9 +26,9 @@ from langchain import LLMMathChain
 import sqlite3
 import pandas as pd
 import os
-import openai
 
 os.environ['OPENAI_API_KEY'] = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else ''
+
 
 # TODO: Allow users to upload their own files
 
@@ -42,8 +42,7 @@ def create_research_db():
                 quant_facts TEXT,
                 publications TEXT,
                 books TEXT,
-                ytlinks TEXT,
-                prev_ai_research TEXT
+                ytlinks TEXT
             )
         """)
 
@@ -59,13 +58,13 @@ def read_research_table():
     return df
 
 
-def insert_research(user_input, introduction, quant_facts, publications, books, ytlinks, prev_ai_research):
+def insert_research(user_input, introduction, quant_facts, publications, books, ytlinks):
     with sqlite3.connect('MASTER.db') as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO Research (user_input, introduction, quant_facts, publications, books, ytlinks, prev_ai_research)
+            INSERT INTO Research (user_input, introduction, quant_facts, publications, books, ytlinks)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (user_input, introduction, quant_facts, publications, books, ytlinks, prev_ai_research))
+        """, (user_input, introduction, quant_facts, publications, books, ytlinks))
 
 
 def generate_research(userInput):
@@ -105,16 +104,15 @@ def generate_research(userInput):
 
         )
     ]
-    if st.session_state.embeddings_db:
-        qa = VectorDBQA.from_chain_type(llm=llm,
-                                        vectorstore=st.session_state.embeddings_db)
-        tools.append(
-            Tool(
-                name='Vector-Based Previous Resarch Database Tool',
-                func=qa.run,
-                description='Provides access to previous research results'
-            )
-        )
+    # if st.session_state.embeddings_db:
+    #     qa = VectorDBQA.from_chain_type(llm=llm, vectorstore=st.session_state.embeddings_db)
+    #     tools.append(
+    #         Tool(
+    #             name='Vector-Based Previous Resarch Database Tool',
+    #             func=qa.run,
+    #             description='Provides access to previous research results'
+    #         )
+    #     )
 
     memory = ConversationBufferMemory(memory_key="chat_history")
     runAgent = initialize_agent(tools,
@@ -124,18 +122,17 @@ def generate_research(userInput):
                                 memory=memory,
                                 )
 
-    with st.expander("Generative Results", expanded=True):
-        st.subheader("User Input:")
+    with st.expander("检索结果", expanded=True):
+        st.subheader("检索主题:")
         st.write(userInput)
 
-        st.subheader("Introduction:")
-        with st.spinner("Generating Introduction"):
+        st.subheader("介绍:")
+        with st.spinner("努力搬运中..."):
             intro = runAgent(f'Write an academic introduction about {userInput}')
             st.write(intro['output'])
 
-        st.subheader("Quantitative Facts:")
-        with st.spinner("Generating Statistical Facts"):
-
+        st.subheader("话题摘录:")
+        with st.spinner("努力搬运中..."):
             quantFacts = runAgent(f'''
                 Considering user input: {userInput} and the intro paragraph: {intro} 
                 \nGenerate a list of 3 to 5 quantitative facts about: {userInput}
@@ -143,19 +140,18 @@ def generate_research(userInput):
             ''')
             st.write(quantFacts['output'])
 
-        prev_ai_research = ""
-        if st.session_state.embeddings_db:
-            st.subheader("Previous Related AI Research:")
-            with st.spinner("Researching Pevious Research"):
-                qa = VectorDBQA.from_chain_type(llm=llm,
-                                                vectorstore=st.session_state.embeddings_db)
-                prev_ai_research = qa.run(f'''
-                    \nReferring to previous results and information, write about: {userInput}
-                ''')
-                st.write(prev_ai_research)
+        # prev_ai_research = ""
+        # if st.session_state.embeddings_db:
+        #     st.subheader("Previous Related AI Research:")
+        #     with st.spinner("Researching Pevious Research"):
+        #         qa = VectorDBQA.from_chain_type(llm=llm, vectorstore=st.session_state.embeddings_db)
+        #         prev_ai_research = qa.run(f'''
+        #             \nReferring to previous results and information, write about: {userInput}
+        #         ''')
+        #         st.write(prev_ai_research)
 
-        st.subheader("Recent Publications:")
-        with st.spinner("Generating Recent Publications"):
+        st.subheader("最新论文:")
+        with st.spinner("努力搬运中..."):
             papers = runAgent(f'''
                 Consider user input: "{userInput}".
                 \nConsider the intro paragraph: "{intro}",
@@ -165,8 +161,8 @@ def generate_research(userInput):
             ''')
             st.write(papers['output'])
 
-        st.subheader("Reccomended Books:")
-        with st.spinner("Generating Reccomended Books"):
+        st.subheader("推荐书籍:")
+        with st.spinner("努力搬运中..."):
             readings = runAgent(f'''
                 Consider user input: "{userInput}".
                 \nConsider the intro paragraph: "{intro}",
@@ -175,8 +171,8 @@ def generate_research(userInput):
             ''')
             st.write(readings['output'])
 
-        st.subheader("YouTube Links:")
-        with st.spinner("Generating YouTube Links"):
+        st.subheader("相关视频:")
+        with st.spinner("努力搬运中..."):
             search = VideosSearch(userInput)
             ytlinks = ""
             for i in range(1, 6):
@@ -193,14 +189,13 @@ def generate_research(userInput):
 
         # TODO: Possible Routes for Original Research
 
-        insert_research(userInput, intro['output'], quantFacts['output'], papers['output'], readings['output'], ytlinks,
-                        prev_ai_research)
-        research_text = [userInput, intro['output'], quantFacts['output'], papers['output'], readings['output'],
-                         ytlinks, prev_ai_research]
-        embedding_function = OpenAIEmbeddings()
-        vectordb = Chroma.from_texts(research_text, embedding_function, persist_directory="./chroma_db")
-        vectordb.persist()
-        st.session_state.embeddings_db = vectordb
+        insert_research(userInput, intro['output'], quantFacts['output'], papers['output'], readings['output'], ytlinks)
+        # research_text = [userInput, intro['output'], quantFacts['output'], papers['output'], readings['output'],
+        #                  ytlinks]
+        # embedding_function = OpenAIEmbeddings()
+        # vectordb = Chroma.from_texts(research_text, embedding_function, persist_directory="./chroma_db")
+        # vectordb.persist()
+        # st.session_state.embeddings_db = vectordb
 
 
 class Document:
@@ -220,61 +215,59 @@ def init_ses_states():
 
 
 def main():
-    st.set_page_config(page_title="Research Bot")
+    # st.set_page_config(page_title="Research Bot👨‍🎓")
     create_research_db()
-    llm = OpenAI(temperature=0.7)
-    embedding_function = OpenAIEmbeddings()
     init_ses_states()
-    if os.path.exists("./chroma_db"):
-        st.session_state.embeddings_db = Chroma(persist_directory="./chroma_db", embedding_function=embedding_function)
-    st.header("GPT-4 LangChain Agents Research Bot")
-    deploy_tab, prev_tab = st.tabs(["Generate Research", "Previous Research"])
+    # llm = OpenAI(temperature=0.7)
+    # embedding_function = OpenAIEmbeddings()
+    # if os.path.exists("./chroma_db"):
+    #     st.session_state.embeddings_db = Chroma(persist_directory="./chroma_db", embedding_function=embedding_function)
+    st.title("学术查询👨‍🎓")
+    deploy_tab, prev_tab = st.tabs(["开始检索", "历史检索"])
     with deploy_tab:
-        userInput = st.text_area(label="User Input")
-        if st.button("Generate Report") and userInput:
+        userInput = st.text_area(label="检索主题")
+        if st.button("生成报告") and userInput:
             generate_research(userInput)
-        st.subheader("Chat with Data")
-        user_message = st.text_input(label="User Message", key="um1")
-        if st.button("Submit Message") and user_message:
-            memory = ConversationBufferMemory(memory_key="chat_history")
-            chatAgent = initialize_agent(tools,
-                                         llm,
-                                         agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
-                                         verbose=True,
-                                         memory=memory,
-                                         )
+
+        # st.subheader("Chat with Data")
+        # user_message = st.text_input(label="User Message", key="um1")
+        # if st.button("Submit Message") and user_message:
+        #     memory = ConversationBufferMemory(memory_key="chat_history")
+        #     chatAgent = initialize_agent(tools,
+        #                                  llm,
+        #                                  agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
+        #                                  verbose=True,
+        #                                  memory=memory,
+        #                                  )
     with prev_tab:
         st.dataframe(read_research_table())
-        selected_input = st.selectbox(label="Previous User Inputs",
+        selected_input = st.selectbox(label="历史检索主题",
                                       options=[i for i in read_research_table().user_input])
-        if st.button("Render Research") and selected_input:
-            with st.expander("Rendered Previous Research", expanded=True):
+        if st.button("检索") and selected_input:
+            with st.expander("努力搬运中...", expanded=True):
                 selected_df = read_research_table()
                 selected_df = selected_df[selected_df.user_input == selected_input].reset_index(drop=True)
 
-                st.subheader("User Input:")
+                st.subheader("检索主题:")
                 st.write(selected_df.user_input[0])
 
-                st.subheader("Introduction:")
+                st.subheader("介绍:")
                 st.write(selected_df.introduction[0])
 
-                st.subheader("Quantitative Facts:")
+                st.subheader("话题摘录:")
                 st.write(selected_df.quant_facts[0])
 
-                st.subheader("Previous Related AI Research:")
-                st.write(selected_df.prev_ai_research[0])
-
-                st.subheader("Recent Publications:")
+                st.subheader("最新论文::")
                 st.write(selected_df.publications[0])
 
-                st.subheader("Recommended Books:")
+                st.subheader("推荐书籍:")
                 st.write(selected_df.books[0])
 
-                st.subheader("YouTube Links:")
+                st.subheader("相关视频:")
                 st.write(selected_df.ytlinks[0])
 
-            st.subheader("Chat with Data")
-            prev_user_message = st.text_input(label="User Message", key="um2")
+            # st.subheader("Chat with Data")
+            # prev_user_message = st.text_input(label="User Message", key="um2")
 
 
 if __name__ == '__main__':
