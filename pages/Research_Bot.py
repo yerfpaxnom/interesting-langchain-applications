@@ -63,7 +63,7 @@ def insert_research(user_input, introduction, quant_facts, publications, books, 
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO Research (user_input, introduction, quant_facts, publications, books, ytlinks)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
         """, (user_input, introduction, quant_facts, publications, books, ytlinks))
 
 
