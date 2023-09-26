@@ -243,28 +243,28 @@ def main():
         st.dataframe(read_research_table())
         selected_input = st.selectbox(label="历史检索主题",
                                       options=[i for i in read_research_table().user_input])
-        if st.button("检索") and selected_input:
-            with st.expander("努力搬运中...", expanded=True):
-                selected_df = read_research_table()
-                selected_df = selected_df[selected_df.user_input == selected_input].reset_index(drop=True)
+        # if st.button("检索") and selected_input:
+        if selected_input:
+            selected_df = read_research_table()
+            selected_df = selected_df[selected_df.user_input == selected_input].reset_index(drop=True)
 
-                st.subheader("检索主题:")
-                st.write(selected_df.user_input[0])
+            st.subheader("检索主题:")
+            st.write(selected_df.user_input[0])
 
-                st.subheader("介绍:")
-                st.write(selected_df.introduction[0])
+            st.subheader("介绍:")
+            st.write(selected_df.introduction[0])
 
-                st.subheader("话题摘录:")
-                st.write(selected_df.quant_facts[0])
+            st.subheader("话题摘录:")
+            st.write(selected_df.quant_facts[0])
 
-                st.subheader("最新论文::")
-                st.write(selected_df.publications[0])
+            st.subheader("最新论文::")
+            st.write(selected_df.publications[0])
 
-                st.subheader("推荐书籍:")
-                st.write(selected_df.books[0])
+            st.subheader("推荐书籍:")
+            st.write(selected_df.books[0])
 
-                st.subheader("相关视频:")
-                st.write(selected_df.ytlinks[0])
+            st.subheader("相关视频:")
+            st.write(selected_df.ytlinks[0])
 
             # st.subheader("Chat with Data")
             # prev_user_message = st.text_input(label="User Message", key="um2")
