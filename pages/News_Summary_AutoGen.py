@@ -1,22 +1,19 @@
 import autogen
 import streamlit as st
 
-config_list = autogen.config_list_from_json(
-    env_or_file="OAI_CONFIG_LIST",
-    file_location=".",
-    filter_dict={
-        "model": {
-            "gpt-4",
-            "gpt4",
-            "gpt-4-32k",
-            "gpt-4-32k-0314",
-            "gpt-35-turbo",
-            "gpt-3.5-turbo",
-        }
-    },
-)
+openai_api_key = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else "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"
 
-assert len(config_list) > 0
+# User inputs
+radio_opt = ["gpt-4", "gpt-3.5-turbo"]
+selected_opt = st.sidebar.radio(label="Choose model", options=radio_opt)
+if radio_opt.index(selected_opt) == 0:
+    config_list = [{'api_key': openai_api_key, 'model': 'gpt-4'}]
+    print(config_list)
+else:
+    config_list = [{'api_key': openai_api_key, 'model': 'gpt-3.5-turbo'}]
+    print(config_list)
+
+
 print("models to use: ", [config_list[i]["model"] for i in range(len(config_list))])
 
 # create an AssistantAgent named "assistant"
@@ -53,5 +50,6 @@ with st.container():
             assistant,
             message=question,
         )
-        response = user_proxy.last_message()
-        st.write(response['content'])
+        s = "\n".join(f"{dct['role']}==>\n {dct['content']}" for dct in list(user_proxy.chat_messages.values())[-1])
+        st.write(s)
+
