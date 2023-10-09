@@ -1,7 +1,7 @@
 import autogen
 import streamlit as st
 
-openai_api_key = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else "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"
+openai_api_key = st.session_state['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in st.session_state else ""
 
 # User inputs
 radio_opt = ["gpt-4", "gpt-3.5-turbo"]
